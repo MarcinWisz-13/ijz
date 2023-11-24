@@ -1,0 +1,78 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI;
+use Text::CSV;
+
+my $cgi = CGI->new;
+my $cookie_name = 'current_row';
+my $csv_file = '/sciezka/do/pliku.csv'; # Zmień na właściwą ścieżkę do pliku CSV
+
+# Odczytanie numeru bieżącego wiersza z ciasteczka
+my $current_row = $cgi->cookie($cookie_name) || 1;
+
+# Odczytanie danych z pliku CSV
+my @data;
+open(my $fh, '<', $csv_file) or die "Nie można otworzyć pliku CSV: $!";
+while (my $line = <$fh>) {
+    chomp($line);
+    push @data, $line;
+}
+close($fh);
+
+# Parsowanie danych z pliku CSV
+my $csv = Text::CSV->new({ sep_char => ';' });
+my @headers;
+my @rows;
+foreach my $row (@data) {
+    if ($csv->parse($row)) {
+        my @fields = $csv->fields();
+        if (!@headers) {
+            @headers = @fields;
+        } else {
+            push @rows, \@fields;
+        }
+    }
+}
+
+# Wyświetlanie odpowiedniego wiersza w zależności od akcji (Next/Prev)
+my $num_rows = scalar @rows;
+if ($cgi->param('next')) {
+    $current_row = $current_row % $num_rows + 1;
+} elsif ($cgi->param('prev')) {
+    $current_row = $current_row - 1;
+    $current_row = $num_rows if $current_row < 1;
+}
+
+# Zapis numeru bieżącego wiersza do ciasteczka
+print $cgi->header(-cookie => $cgi->cookie(
+    -name => $cookie_name,
+    -value => $current_row,
+));
+
+# Wyświetlanie formularza i danych wiersza
+print $cgi->start_html(-title => 'CSV Viewer');
+print $cgi->start_form;
+print "<h1>Record $current_row</h1>";
+print "<table border='1'>";
+print "<tr><th>", join("</th><th>", @headers), "</th></tr>";
+my $current_data = $rows[$current_row - 1];
+print "<tr><td>", join("</td><td>", @$current_data), "</td></tr>";
+print "</table><br/>";
+print $cgi->submit(-name => 'prev', -value => 'Prev');
+print "&nbsp;&nbsp;";
+print $cgi->submit(-name => 'next', -value => 'Next');
+print $cgi->end_form;
+print $cgi->end_html;
+
+
+//Napisać skrypt CGI, który wyświetla jeden rekord (wiersz) z pliku tekstowego w formacie CSV
+zapisanego na serwerze oraz dwa przyciski ,,Next" i ,,Prev". Wciśniecie ,,Next" wyświetla następny
+rekord a wciśniecie ,,Prev" wyświetla poprzedni rekord. Pierwsze uruchomienie z danej
+przeglądarki wyświetla pierwszy rekord. Informacje o bieżącym wierszu należy przechowywać w
+ciasteczku. W celu łatwiejszego testowania plik CSV powinien zawierać numer rekordu, np.:
+ID; Description; City
+1; test record; Warszawa
+2; test record; Krakow
+3; test record; Wroclaw
+4; test record; Gdansk
