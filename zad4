@@ -1,0 +1,44 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI;
+use File::Basename;
+
+my $cgi = CGI->new;
+
+# Pobranie przesłanego pliku
+my $upload_filehandle = $cgi->upload('upload_file');
+my $filename = $cgi->param('upload_file');
+
+# Ścieżka do katalogu, gdzie będą zapisywane pliki
+my $upload_dir = '/sciezka/do/katalogu/zapisu';
+
+# Jeśli plik został przesłany
+if ($upload_filehandle) {
+    my $filepath = "$upload_dir/$filename";
+
+    # Sprawdzenie, czy plik już istnieje
+    if (-e $filepath) {
+        print $cgi->header(-status => '409 Conflict');
+        print "Plik o nazwie $filename już istnieje na serwerze. Wybierz inną nazwę pliku.";
+    } else {
+        # Zapis pliku na serwerze
+        open(my $file, '>', $filepath) or die "Nie można utworzyć pliku: $!";
+        while (my $bytes = <$upload_filehandle>) {
+            print $file $bytes;
+        }
+        close($file);
+        print $cgi->header;
+        print "Plik $filename został pomyślnie wgrany na serwer.";
+    }
+} else {
+    # Jeśli nie został przesłany żaden plik
+    print $cgi->header(-status => '400 Bad Request');
+    print "Nie wybrano żadnego pliku do przesłania.";
+}
+
+
+
+//Napisać skrypt CGI, który umożliwia wgrywanie plików na serwer. Jeśli plik o takiej nazwie już
+istnieje na serwerze wyświetlany jest stosowny komunikat i plik nie jest nadpisywany. Nazwa pliku
+na serwerze powinna być identyczna z nazwą oryginału.
