@@ -1,0 +1,23 @@
+#!/usr/bin/perl
+
+use CGI;
+
+my $cgi = CGI->new;
+
+# Pobranie parametrów z zapytania
+my $text = $cgi->param('text') || '';  # Pierwszy argument - łańcuch znakowy
+my $multiplier = $cgi->param('multiplier') || 0;  # Drugi argument - liczba powtórzeń
+
+# Utworzenie powielonego łańcucha znakowego
+my $result = $text x $multiplier;
+
+# Ustawienie nagłówka HTTP jako typu zawartości tekstowej
+print $cgi->header('text/plain');
+
+# Wyświetlenie wyniku
+print $result;
+
+
+//Proszę napisać skrypt CGI, który powiela łańcuch znakowy podany w pierwszym argumencie tyle
+razy ile wynosi wartość w drugim argumencie. Na przykład dla wywołania
+http://localhost:8080/skrypt.cgi?abc+3, skrypt powinien wyświetlić ,,abcabcabc".
