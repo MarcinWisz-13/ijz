@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use CGI;
+
+
+print "Content-Type: text/plain;charset=utf-8\n\n";
+print "Tablica znaków ASCII:\n";
+
+for my $i (0..127) {
+    my $char = chr($i);
+    print "$i=$char\n";
+}

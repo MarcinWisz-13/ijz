@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+
+my $file_path = "licznik.txt";
+
+
+open my $file, '<', $file_path or die "Nie mozna otworzyc pliku: $!";
+
+
+my $count = <$file>;
+if (!$count) {
+    $count = 0;
+}
+$count++;
+
+
+open $file, '>', $file_path or die "Nie mozna otworzyc pliku: $!";
+print $file $count;
+
+
+print "Content-Type: text/html;charset=utf-8\n\n";
+print "<html><body>";
+print "<h2>Liczba odwiedzin: $count</h2>";
+print "</body></html>";
+

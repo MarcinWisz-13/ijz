@@ -1,0 +1,19 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+print "Content-type: text/plain\n\n";
+
+
+my @args = @ARGV;
+
+if (@args) {
+    print "Oto argumenty z linii polecen:\n";
+    foreach my $arg (@args) {
+        print "$arg\n";
+    }
+} else {
+    print "Brak argumentow z linii polecen.";
+}
+

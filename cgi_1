@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use CGI;
+my $cgi = CGI->new;
+
+print $cgi->header('text/plain');
+
+my $argument = $cgi->param('argument');
+
+if ($argument) {
+    print "Pobrano argument z adresu strony: $argument";
+} else {
+    print "Nie znaleziono argumentu na stronie.";
+}

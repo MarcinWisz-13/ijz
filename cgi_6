@@ -1,0 +1,23 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use CGI;
+
+
+
+my $cgi = CGI->new;
+print $cgi->header(-type => 'text/plain;charset=utf-8');
+
+
+my $filename = $cgi->param('file');
+
+if ($filename) {
+    open my $file, '<', $filename or die "Nie mozna otworzyć pliku: $!";
+    while (my $line = <$file>) {
+        print $line;
+    }
+    close $file;
+} else {
+    print "Nie okreslono nazwy pliku.";
+}
