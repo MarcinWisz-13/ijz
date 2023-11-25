@@ -1,11 +1,11 @@
-#!/usr/bin/perl
+#!/usr/bin/perl  // To jest tzw. "shebang", wskazuje na lokalizację interpretera, który ma zostać użyty do wykonania tego skryptu. W tym przypadku wskazuje na interpreter Perla.
 
-use CGI;
+use CGI;    //Importuje moduł CGI, który umożliwia pracę z parametrami przekazywanymi do skryptu przez protokół HTTP.
 
-my $cgi = CGI->new;
+my $cgi = CGI->new;    //Tworzy nowy obiekt CGI, który będzie używany do przetwarzania danych przesłanych do skryptu przez żądanie HTTP.
 
 # Pobranie parametrów z zapytania
-my $text = $cgi->param('text') || '';  # Pierwszy argument - łańcuch znakowy
+my $text = $cgi->param('text') || '';  # Pierwszy argument - łańcuch znakowy   //Pobiera wartość parametru 'text' przesłanego przez żądanie HTTP i przypisuje ją do zmiennej $text. Jeśli parametr 'text' nie został przesłany, zmienna przyjmuje pustą wartość.
 my $multiplier = $cgi->param('multiplier') || 0;  # Drugi argument - liczba powtórzeń
 
 # Utworzenie powielonego łańcucha znakowego
